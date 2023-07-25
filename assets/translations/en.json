@@ -1,0 +1,17 @@
+{
+   "common": {
+      "appName": "Repo browser"
+   },
+   "page": {
+      "home": {
+         "title": "Good morning!",
+         "search": "Search...",
+         "results": "RESULTS",
+         "noResults": "No results",
+         "error": "Error: {}"
+      },
+      "article": {
+         "homeButton": "Back to home"
+      }
+   }
+}

@@ -1,0 +1,17 @@
+{
+   "common": {
+      "appName": "Repo browser"
+   },
+   "page": {
+      "home": {
+         "title": "Guten Morgen!",
+         "search": "Suchen...",
+         "results": "ERGEBNISSE",
+         "noResults": "Keine Ergebnisse",
+         "error": "Fehler: {}"
+      },
+      "article": {
+         "homeButton": "Zurück zur Startseite"
+      }
+   }
+}
