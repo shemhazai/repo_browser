@@ -10,7 +10,7 @@
          "noResults": "Keine Ergebnisse",
          "error": "Fehler: {}"
       },
-      "article": {
+      "repository": {
          "homeButton": "Zurück zur Startseite"
       }
    }

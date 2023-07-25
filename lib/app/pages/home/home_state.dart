@@ -1,5 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:repo_browser/model/article/entity/article.dart';
+import 'package:repo_browser/model/git/entity/repository.dart';
 
 part 'home_state.freezed.dart';
 
@@ -10,16 +10,16 @@ class HomeState with _$HomeState {
   const factory HomeState.noResults() = _NoResults;
   const factory HomeState.content({
     required SearchResult searchResult,
-    required List<HomeArticleHeadline> headlines,
+    required List<HomeRepositoryHeadline> headlines,
   }) = _Content;
   const factory HomeState.error(Object error) = _Error;
 }
 
 @freezed
-class HomeArticleHeadline with _$HomeArticleHeadline {
-  const factory HomeArticleHeadline({
+class HomeRepositoryHeadline with _$HomeRepositoryHeadline {
+  const factory HomeRepositoryHeadline({
     required String id,
     required String title,
-    required Article article,
-  }) = _HomeArticlePage;
+    required Repository repository,
+  }) = _HomeRepositoryHeadline;
 }

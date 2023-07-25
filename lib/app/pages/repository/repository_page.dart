@@ -5,38 +5,36 @@ import 'package:repo_browser/app/assets/app_images.dart';
 import 'package:repo_browser/app/common/theming/dimens.dart';
 import 'package:repo_browser/app/router/router.gr.dart';
 import 'package:repo_browser/app/widgets/markdown_widget.dart';
-import 'package:repo_browser/common/extensions/images.dart';
 import 'package:repo_browser/generated/locale_keys.g.dart';
-import 'package:repo_browser/model/article/entity/article.dart';
+import 'package:repo_browser/model/git/entity/repository.dart';
 
-/// A page that displays article details.
+/// A page that displays repository details.
 @RoutePage()
-class ArticlePage extends StatelessWidget {
+class RepositoryPage extends StatelessWidget {
   final SearchResult searchResult;
-  final Article article;
+  final Repository repository;
   final Color? accentColor;
 
-  const ArticlePage({
+  const RepositoryPage({
     super.key,
     required this.searchResult,
-    required this.article,
+    required this.repository,
     required this.accentColor,
   });
 
-  /// Navigates to the [ArticlePage]. The idea is to have a helper
+  /// Navigates to the [RepositoryPage]. The idea is to have a helper
   /// method which preresolves the accentColor to avoid cpu-intensive
   /// calculation when the transition is ongoing.
   static Future<void> show({
     required BuildContext context,
     required SearchResult searchResult,
-    required Article article,
+    required Repository repository,
   }) async {
-    final Color? color = await ImageColorRecognizer.getDominantColor(article.imageUrl);
     if (context.mounted) {
-      await context.router.push(ArticleRoute(
+      await context.router.push(RepositoryRoute(
         searchResult: searchResult,
-        article: article,
-        accentColor: color,
+        repository: repository,
+        accentColor: Colors.black,
       ));
     }
   }
@@ -55,7 +53,7 @@ class ArticlePage extends StatelessWidget {
       body: SafeArea(
         child: ArticleBody(
           searchResult: searchResult,
-          article: article,
+          repository: repository,
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
@@ -69,12 +67,12 @@ class ArticlePage extends StatelessWidget {
 
 class ArticleBody extends StatelessWidget {
   final SearchResult searchResult;
-  final Article article;
+  final Repository repository;
 
   const ArticleBody({
     super.key,
     required this.searchResult,
-    required this.article,
+    required this.repository,
   });
 
   @override
@@ -83,12 +81,12 @@ class ArticleBody extends StatelessWidget {
       Positioned.fill(
         child: ListView(children: [
           Hero(
-            tag: ArticlePage.buildImageTag(article.id),
-            child: Image.network(article.imageUrl, fit: BoxFit.cover),
+            tag: RepositoryPage.buildImageTag(repository.id),
+            child: Image.network(repository.imageUrl, fit: BoxFit.cover),
           ),
           _Content(
             searchResult: searchResult,
-            article: article,
+            repository: repository,
           ),
         ]),
       ),
@@ -103,11 +101,11 @@ class ArticleBody extends StatelessWidget {
 
 class _Content extends StatelessWidget {
   final SearchResult searchResult;
-  final Article article;
+  final Repository repository;
 
   const _Content({
     required this.searchResult,
-    required this.article,
+    required this.repository,
   });
 
   @override
@@ -119,16 +117,16 @@ class _Content extends StatelessWidget {
         children: [
           Spacing.big,
           Hero(
-            tag: ArticlePage.buildTitleTag(article.id),
-            child: Text(article.title, style: Theme.of(context).textTheme.headlineSmall),
+            tag: RepositoryPage.buildTitleTag(repository.id),
+            child: Text(repository.title, style: Theme.of(context).textTheme.headlineSmall),
           ),
           Spacing.big,
-          ArticleMarkdown(
-            body: article.body,
-            onTapArticle: (String articleId) => ArticlePage.show(
+          RepositoryMarkdown(
+            body: repository.body,
+            onTapRepository: (String repository) => RepositoryPage.show(
               context: context,
               searchResult: searchResult,
-              article: searchResult.getArticle(articleId),
+              repository: searchResult.getRepository(repository),
             ),
           ),
           const SizedBox(height: 80),

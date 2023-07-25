@@ -5,13 +5,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repo_browser/app/assets/app_images.dart';
 import 'package:repo_browser/app/common/theming/dimens.dart';
 import 'package:repo_browser/app/di/di.dart';
-import 'package:repo_browser/app/pages/article/article_page.dart';
 import 'package:repo_browser/app/pages/home/home_bloc.dart';
 import 'package:repo_browser/app/pages/home/home_state.dart';
+import 'package:repo_browser/app/pages/repository/repository_page.dart';
 import 'package:repo_browser/generated/locale_keys.g.dart';
-import 'package:repo_browser/model/article/entity/article.dart';
+import 'package:repo_browser/model/git/entity/repository.dart';
 
-/// An initial page of the application, allows to search for articles.
+/// An initial page of the application, allows to search for repositories.
 @RoutePage()
 class HomePage extends StatelessWidget {
   const HomePage({super.key});
@@ -164,7 +164,7 @@ class _Error extends StatelessWidget {
 
 class _Content extends StatelessWidget {
   final SearchResult searchResult;
-  final List<HomeArticleHeadline> headlines;
+  final List<HomeRepositoryHeadline> headlines;
 
   const _Content({
     required this.searchResult,
@@ -189,16 +189,16 @@ class _Content extends StatelessWidget {
             padding: Insets.small,
             itemCount: headlines.length,
             itemBuilder: (BuildContext context, int index) {
-              final HomeArticleHeadline headline = headlines[index];
-              return _ArticleHeadlineWidget(
+              final HomeRepositoryHeadline headline = headlines[index];
+              return _RepositoryHeadlineWidget(
                 headline: headline,
                 onPressed: () {
                   FocusScope.of(context).unfocus();
 
-                  ArticlePage.show(
+                  RepositoryPage.show(
                     context: context,
                     searchResult: searchResult,
-                    article: headline.article,
+                    repository: headline.repository,
                   );
                 },
               );
@@ -210,11 +210,11 @@ class _Content extends StatelessWidget {
   }
 }
 
-class _ArticleHeadlineWidget extends StatelessWidget {
-  final HomeArticleHeadline headline;
+class _RepositoryHeadlineWidget extends StatelessWidget {
+  final HomeRepositoryHeadline headline;
   final VoidCallback? onPressed;
 
-  const _ArticleHeadlineWidget({
+  const _RepositoryHeadlineWidget({
     required this.headline,
     required this.onPressed,
   });
@@ -235,9 +235,9 @@ class _ArticleHeadlineWidget extends StatelessWidget {
           child: Stack(children: [
             Positioned.fill(
               child: Hero(
-                tag: ArticlePage.buildImageTag(headline.article.id),
+                tag: RepositoryPage.buildImageTag(headline.repository.id),
                 child: Image.network(
-                  headline.article.imageUrl,
+                  headline.repository.imageUrl,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -247,7 +247,7 @@ class _ArticleHeadlineWidget extends StatelessWidget {
               left: 20,
               right: 20,
               child: Hero(
-                tag: ArticlePage.buildTitleTag(headline.article.id),
+                tag: RepositoryPage.buildTitleTag(headline.repository.id),
                 child: Text(
                   headline.title,
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(color: foregroundColor),

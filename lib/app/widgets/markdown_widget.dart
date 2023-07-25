@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
-typedef OnTapArticle = void Function(String articleId);
+typedef OnTapRepository = void Function(String repositoryId);
 
 /// Renders the markdown text.
-class ArticleMarkdown extends StatelessWidget {
+class RepositoryMarkdown extends StatelessWidget {
   final String body;
-  final OnTapArticle? onTapArticle;
+  final OnTapRepository? onTapRepository;
 
-  const ArticleMarkdown({
+  const RepositoryMarkdown({
     super.key,
     required this.body,
-    this.onTapArticle,
+    this.onTapRepository,
   });
 
   @override
@@ -19,9 +19,9 @@ class ArticleMarkdown extends StatelessWidget {
     return MarkdownBody(
       data: body,
       onTapLink: (String text, String? href, String title) {
-        final String? articleId = _parseArticleId(href);
-        if (articleId != null) {
-          onTapArticle?.call(articleId);
+        final String? repositoryId = _parseRepositoryId(href);
+        if (repositoryId != null) {
+          onTapRepository?.call(repositoryId);
         }
       },
       styleSheet: MarkdownStyleSheet(
@@ -30,7 +30,7 @@ class ArticleMarkdown extends StatelessWidget {
     );
   }
 
-  String? _parseArticleId(String? href) {
+  String? _parseRepositoryId(String? href) {
     if (href == null) return null;
 
     final int index = href.indexOf(RegExp(':'));

@@ -1,13 +1,15 @@
 import 'package:repo_browser/app/common/bloc/base_cubit.dart';
 import 'package:repo_browser/app/pages/home/home_page.dart';
 import 'package:repo_browser/app/pages/home/home_state.dart';
-import 'package:repo_browser/model/article/article_use_case.dart';
-import 'package:repo_browser/model/article/entity/article.dart';
-import 'package:repo_browser/model/article/exception/article_exceptions.dart';
+import 'package:repo_browser/common/logger/logger.dart';
+import 'package:repo_browser/model/git/entity/repository.dart';
+import 'package:repo_browser/model/git/git_use_case.dart';
+
+const Logger _logger = Logger('HomeBloc');
 
 /// State management for the [HomePage].
 class HomeBloc extends BaseCubit<HomeState> {
-  final ArticleUseCase _useCase;
+  final GitRepositoryUseCase _useCase;
 
   HomeBloc(this._useCase) : super(const HomeState.empty());
 
@@ -20,26 +22,25 @@ class HomeBloc extends BaseCubit<HomeState> {
 
       emit(const HomeState.loading());
 
-      final data = await _useCase.searchArticles(text);
-      final articles = _mapArticles(data);
-      if (articles.isEmpty) {
+      final data = await _useCase.searchRepositories(text);
+      final repositories = _mapRepositories(data);
+      if (repositories.isEmpty) {
         emit(const HomeState.noResults());
       } else {
-        emit(HomeState.content(searchResult: data, headlines: articles));
+        emit(HomeState.content(searchResult: data, headlines: repositories));
       }
-    } on SearchArticleNoResultsException {
-      emit(const HomeState.noResults());
-    } on SearchArticleInvalidQueryException catch (error) {
+    } on Exception catch (error, stackTrace) {
       emit(HomeState.error(error));
+      _logger.logError(error, stackTrace);
     }
   }
 
-  List<HomeArticleHeadline> _mapArticles(SearchResult result) {
-    return result.pages.map((e) {
-      return HomeArticleHeadline(
+  List<HomeRepositoryHeadline> _mapRepositories(SearchResult result) {
+    return result.items.map((e) {
+      return HomeRepositoryHeadline(
         id: e.id,
         title: e.title,
-        article: result.getArticle(e.itemId),
+        repository: e,
       );
     }).toList();
   }
