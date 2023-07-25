@@ -39,37 +39,37 @@ class RepositoryPage extends StatelessWidget {
     }
   }
 
-  static String buildImageTag(String articleId) {
-    return 'image_article_$articleId';
+  static String buildImageTag(String repository) {
+    return 'image_repository_$repository';
   }
 
-  static String buildTitleTag(String articleId) {
-    return 'title_article_$articleId';
+  static String buildTitleTag(String repository) {
+    return 'title_repository_$repository';
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
-        child: ArticleBody(
+        child: RepositoryBody(
           searchResult: searchResult,
           repository: repository,
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
         backgroundColor: accentColor,
-        label: Text(LocaleKeys.page_article_homeButton.tr()),
+        label: Text(LocaleKeys.page_repository_homeButton.tr()),
         onPressed: () => context.router.popUntilRoot(),
       ),
     );
   }
 }
 
-class ArticleBody extends StatelessWidget {
+class RepositoryBody extends StatelessWidget {
   final SearchResult searchResult;
   final Repository repository;
 
-  const ArticleBody({
+  const RepositoryBody({
     super.key,
     required this.searchResult,
     required this.repository,
