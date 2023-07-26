@@ -28,9 +28,18 @@ class RepositoryPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => inject<RepositoryBloc>()..loadData(repository),
-      child: RepositoryBody(
-        repository: repository,
-        accentColor: accentColor,
+      child: Scaffold(
+        body: SafeArea(
+          child: RepositoryBody(
+            repository: repository,
+            accentColor: accentColor,
+          ),
+        ),
+        floatingActionButton: FloatingActionButton.extended(
+          backgroundColor: accentColor,
+          label: Text(LocaleKeys.page_repository_homeButton.tr()),
+          onPressed: () => context.router.popUntilRoot(),
+        ),
       ),
     );
   }
@@ -44,7 +53,6 @@ class RepositoryPage extends StatelessWidget {
   }
 }
 
-@RoutePage()
 class RepositoryBody extends StatelessWidget {
   final Repository repository;
   final Color? accentColor;
@@ -57,34 +65,25 @@ class RepositoryBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Stack(
-          children: [
-            Positioned.fill(
-              child: ListView(
-                children: [
-                  Hero(
-                    tag: RepositoryPage.buildImageTag(repository.id.toString()),
-                    child: Image.network(repository.owner.avatarUrl, fit: BoxFit.cover),
-                  ),
-                  _Content(repository: repository),
-                ],
+    return Stack(
+      children: [
+        Positioned.fill(
+          child: ListView(
+            children: [
+              Hero(
+                tag: RepositoryPage.buildImageTag(repository.id.toString()),
+                child: Image.network(repository.owner.avatarUrl, fit: BoxFit.cover),
               ),
-            ),
-            const Positioned(
-              left: 12,
-              top: 12,
-              child: _BackButton(),
-            ),
-          ],
+              _Content(repository: repository),
+            ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton.extended(
-        backgroundColor: accentColor,
-        label: Text(LocaleKeys.page_repository_homeButton.tr()),
-        onPressed: () => context.router.popUntilRoot(),
-      ),
+        const Positioned(
+          left: 12,
+          top: 12,
+          child: _BackButton(),
+        ),
+      ],
     );
   }
 }

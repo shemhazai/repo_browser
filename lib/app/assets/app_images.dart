@@ -1,6 +1,6 @@
 import 'package:repo_browser/app/assets/app_assets.dart';
 
-/// Lists all bitmaps from the bakersoft_app_library package.
+/// Lists all bitmaps from bitmaps.
 abstract class AppImages {
   static final icChevronLeft24 = AppAssets.getPath('images/ic_chevron_left_24.png');
   static final icChevronRight24 = AppAssets.getPath('images/ic_chevron_right_24.png');

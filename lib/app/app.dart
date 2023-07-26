@@ -4,8 +4,10 @@ import 'package:repo_browser/app/common/theming/themes.dart';
 import 'package:repo_browser/app/router/router.dart';
 import 'package:repo_browser/generated/locale_keys.g.dart';
 
+/// The top-most router of the application.
 final AppRouter rootRouter = AppRouter();
 
+/// The material app of the project.
 class RepoBrowserApp extends StatelessWidget {
   const RepoBrowserApp({super.key});
 

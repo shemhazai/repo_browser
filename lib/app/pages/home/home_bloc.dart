@@ -1,5 +1,6 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:repo_browser/app/common/bloc/base_bloc.dart';
 import 'package:repo_browser/app/pages/home/home_page.dart';
 import 'package:repo_browser/app/pages/home/home_state.dart';
 import 'package:repo_browser/common/logger/logger.dart';
@@ -8,7 +9,7 @@ import 'package:repo_browser/model/git/git_use_case.dart';
 const Logger _logger = Logger('HomeBloc');
 
 /// State management for the [HomePage].
-class HomeBloc extends Bloc<HomeEvent, HomeState> {
+class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
   final GitRepositoryUseCase _useCase;
 
   HomeBloc(this._useCase) : super(const HomeState.empty()) {
@@ -20,6 +21,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
   Future<void> _search(HomeSearchEvent event, Emitter<HomeState> emit) async {
     try {
+      print('event: $event');
       if (event.query.isEmpty) {
         emit(const HomeState.empty());
         return;

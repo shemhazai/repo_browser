@@ -1,5 +1,6 @@
 import 'package:repo_browser/common/logger/logger_appender.dart';
 
+/// A facade for collecting & distributing logs.
 class Logger {
   static final List<LoggerAppender> _appenders = [];
   final String tag;
