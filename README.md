@@ -26,6 +26,7 @@ At the end of the video we see a 403 error, this is due to github rate limit.
 - Handle most common errors (rate limit, debounce search requests to not execute on every keystroke, etc.)
 - Ask designers to provide a fancy UI and implement IT :)
 - Think whether to introduce integration tests (E2E)
+- Configure CI/CD, github pipelines to run static code analysis on every PR and CD, maybe on codemagic or bitrise to deploy the app to the store. Linter rules were configured already in analysis_options.yaml.
 
 ## 1. Useful commands list
 
