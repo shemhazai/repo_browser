@@ -48,7 +48,7 @@ class HomeBody extends StatelessWidget {
                 loading: () => const _Loading(),
                 noResults: () => const _NoResults(),
                 error: (error) => _Error(error: error),
-                content: (searchResult, headlines) => _Content(searchResult: searchResult, headlines: headlines),
+                content: (searchResult) => _Content(searchResult: searchResult),
               ),
             );
           },
@@ -92,7 +92,7 @@ class _SearchField extends StatelessWidget {
     return Padding(
       padding: Insets.normal,
       child: TextField(
-        onChanged: bloc.search,
+        onChanged: (text) => bloc.add(HomeEvent.search(text)),
         textInputAction: TextInputAction.search,
         decoration: InputDecoration(
           filled: true,
@@ -154,9 +154,13 @@ class _Error extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        LocaleKeys.page_home_error.tr(args: [error.toString()]),
-        style: Theme.of(context).textTheme.bodyLarge,
+      child: Padding(
+        padding: Insets.normal,
+        child: Text(
+          LocaleKeys.page_home_error.tr(args: [error.toString()]),
+          textAlign: TextAlign.center,
+          style: Theme.of(context).textTheme.bodyLarge,
+        ),
       ),
     );
   }
@@ -164,12 +168,8 @@ class _Error extends StatelessWidget {
 
 class _Content extends StatelessWidget {
   final SearchResult searchResult;
-  final List<HomeRepositoryHeadline> headlines;
 
-  const _Content({
-    required this.searchResult,
-    required this.headlines,
-  });
+  const _Content({required this.searchResult});
 
   @override
   Widget build(BuildContext context) {
@@ -187,18 +187,18 @@ class _Content extends StatelessWidget {
         Expanded(
           child: ListView.builder(
             padding: Insets.small,
-            itemCount: headlines.length,
+            itemCount: searchResult.items.length,
             itemBuilder: (BuildContext context, int index) {
-              final HomeRepositoryHeadline headline = headlines[index];
-              return _RepositoryHeadlineWidget(
-                headline: headline,
+              final Repository repository = searchResult.items[index];
+              return _RepositoryWidget(
+                repository: repository,
                 onPressed: () {
                   FocusScope.of(context).unfocus();
 
                   RepositoryPage.show(
                     context: context,
                     searchResult: searchResult,
-                    repository: headline.repository,
+                    repository: repository,
                   );
                 },
               );
@@ -210,12 +210,12 @@ class _Content extends StatelessWidget {
   }
 }
 
-class _RepositoryHeadlineWidget extends StatelessWidget {
-  final HomeRepositoryHeadline headline;
+class _RepositoryWidget extends StatelessWidget {
+  final Repository repository;
   final VoidCallback? onPressed;
 
-  const _RepositoryHeadlineWidget({
-    required this.headline,
+  const _RepositoryWidget({
+    required this.repository,
     required this.onPressed,
   });
 
@@ -235,9 +235,9 @@ class _RepositoryHeadlineWidget extends StatelessWidget {
           child: Stack(children: [
             Positioned.fill(
               child: Hero(
-                tag: RepositoryPage.buildImageTag(headline.repository.id),
+                tag: RepositoryPage.buildImageTag(repository.id.toString()),
                 child: Image.network(
-                  headline.repository.imageUrl,
+                  repository.owner.avatarUrl,
                   fit: BoxFit.cover,
                 ),
               ),
@@ -247,9 +247,9 @@ class _RepositoryHeadlineWidget extends StatelessWidget {
               left: 20,
               right: 20,
               child: Hero(
-                tag: RepositoryPage.buildTitleTag(headline.repository.id),
+                tag: RepositoryPage.buildTitleTag(repository.id.toString()),
                 child: Text(
-                  headline.title,
+                  repository.name,
                   style: Theme.of(context).textTheme.titleLarge!.copyWith(color: foregroundColor),
                 ),
               ),

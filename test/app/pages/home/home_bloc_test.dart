@@ -9,16 +9,13 @@ import 'package:repo_browser/model/git/git_use_case.dart';
 class MockGitRepositoryUseCase extends Mock implements GitRepositoryUseCase {}
 
 const Repository repository = Repository(
-  id: '1234',
-  title: 'Repository',
-  imageUrl: 'https://www.wp.pl/img.png',
-  body: 'Body',
-);
-
-final HomeRepositoryHeadline homeHeadline = HomeRepositoryHeadline(
-  id: repository.id,
-  title: repository.title,
-  repository: repository,
+  id: 1234,
+  name: 'Repository',
+  owner: RepositoryOwner(
+    id: 5678,
+    login: 'user',
+    avatarUrl: 'https://www.wp.pl/img.png',
+  ),
 );
 
 void main() {
@@ -39,15 +36,14 @@ void main() {
 
         return HomeBloc(useCase);
       },
-      act: (HomeBloc bloc) => bloc.search('spacecraft'),
+      act: (HomeBloc bloc) => bloc.add(const HomeEvent.search('spacecraft')),
       expect: () => [
         const HomeState.loading(),
-        HomeState.content(
-          searchResult: const SearchResult(
+        const HomeState.content(
+          searchResult: SearchResult(
             totalCount: 1,
             items: [repository],
           ),
-          headlines: [homeHeadline],
         ),
       ],
     );
@@ -55,7 +51,7 @@ void main() {
     blocTest(
       'emits empty when query is empty',
       build: () => HomeBloc(useCase),
-      act: (HomeBloc bloc) => bloc.search(''),
+      act: (HomeBloc bloc) => bloc.add(const HomeEvent.search('')),
       expect: () => [const HomeState.empty()],
     );
 
@@ -69,7 +65,7 @@ void main() {
 
         return HomeBloc(useCase);
       },
-      act: (HomeBloc bloc) => bloc.search('spacecraft'),
+      act: (HomeBloc bloc) => bloc.add(const HomeEvent.search('spacecraft')),
       expect: () => [
         const HomeState.loading(),
         const HomeState.noResults(),

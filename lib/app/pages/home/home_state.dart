@@ -5,21 +5,14 @@ part 'home_state.freezed.dart';
 
 @freezed
 class HomeState with _$HomeState {
-  const factory HomeState.loading() = _Loading;
-  const factory HomeState.empty() = _Empty;
-  const factory HomeState.noResults() = _NoResults;
-  const factory HomeState.content({
-    required SearchResult searchResult,
-    required List<HomeRepositoryHeadline> headlines,
-  }) = _Content;
-  const factory HomeState.error(Object error) = _Error;
+  const factory HomeState.loading() = _LoadingState;
+  const factory HomeState.empty() = _EmptyState;
+  const factory HomeState.noResults() = _NoResultsState;
+  const factory HomeState.content({required SearchResult searchResult}) = _ContentState;
+  const factory HomeState.error(Object error) = _ErrorState;
 }
 
 @freezed
-class HomeRepositoryHeadline with _$HomeRepositoryHeadline {
-  const factory HomeRepositoryHeadline({
-    required String id,
-    required String title,
-    required Repository repository,
-  }) = _HomeRepositoryHeadline;
+class HomeEvent with _$HomeEvent {
+  const factory HomeEvent.search(String query) = HomeSearchEvent;
 }

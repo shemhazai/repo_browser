@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:repo_browser/app/assets/app_images.dart';
 import 'package:repo_browser/app/common/theming/dimens.dart';
 import 'package:repo_browser/app/router/router.gr.dart';
-import 'package:repo_browser/app/widgets/markdown_widget.dart';
 import 'package:repo_browser/generated/locale_keys.g.dart';
 import 'package:repo_browser/model/git/entity/repository.dart';
 
@@ -81,8 +80,8 @@ class RepositoryBody extends StatelessWidget {
       Positioned.fill(
         child: ListView(children: [
           Hero(
-            tag: RepositoryPage.buildImageTag(repository.id),
-            child: Image.network(repository.imageUrl, fit: BoxFit.cover),
+            tag: RepositoryPage.buildImageTag(repository.id.toString()),
+            child: Image.network(repository.owner.avatarUrl, fit: BoxFit.cover),
           ),
           _Content(
             searchResult: searchResult,
@@ -117,18 +116,18 @@ class _Content extends StatelessWidget {
         children: [
           Spacing.big,
           Hero(
-            tag: RepositoryPage.buildTitleTag(repository.id),
-            child: Text(repository.title, style: Theme.of(context).textTheme.headlineSmall),
+            tag: RepositoryPage.buildTitleTag(repository.id.toString()),
+            child: Text(repository.name, style: Theme.of(context).textTheme.headlineSmall),
           ),
           Spacing.big,
-          RepositoryMarkdown(
-            body: repository.body,
-            onTapRepository: (String repository) => RepositoryPage.show(
-              context: context,
-              searchResult: searchResult,
-              repository: searchResult.getRepository(repository),
-            ),
-          ),
+          // RepositoryMarkdown(
+          //   body: repository.body,
+          //   onTapRepository: (String repository) => RepositoryPage.show(
+          //     context: context,
+          //     searchResult: searchResult,
+          //     repository: searchResult.getRepository(repository),
+          //   ),
+          // ),
           const SizedBox(height: 80),
         ],
       ),

@@ -1,47 +1,41 @@
-import 'package:repo_browser/app/common/bloc/base_cubit.dart';
+import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:repo_browser/app/pages/home/home_page.dart';
 import 'package:repo_browser/app/pages/home/home_state.dart';
 import 'package:repo_browser/common/logger/logger.dart';
-import 'package:repo_browser/model/git/entity/repository.dart';
 import 'package:repo_browser/model/git/git_use_case.dart';
 
 const Logger _logger = Logger('HomeBloc');
 
 /// State management for the [HomePage].
-class HomeBloc extends BaseCubit<HomeState> {
+class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GitRepositoryUseCase _useCase;
 
-  HomeBloc(this._useCase) : super(const HomeState.empty());
+  HomeBloc(this._useCase) : super(const HomeState.empty()) {
+    on<HomeSearchEvent>(
+      _search,
+      transformer: droppable(),
+    );
+  }
 
-  Future<void> search(String text) async {
+  Future<void> _search(HomeSearchEvent event, Emitter<HomeState> emit) async {
     try {
-      if (text.isEmpty) {
+      if (event.query.isEmpty) {
         emit(const HomeState.empty());
         return;
       }
 
       emit(const HomeState.loading());
 
-      final data = await _useCase.searchRepositories(text);
-      final repositories = _mapRepositories(data);
-      if (repositories.isEmpty) {
+      final data = await _useCase.searchRepositories(event.query);
+      if (data.items.isEmpty) {
         emit(const HomeState.noResults());
       } else {
-        emit(HomeState.content(searchResult: data, headlines: repositories));
+        emit(HomeState.content(searchResult: data));
       }
     } on Exception catch (error, stackTrace) {
       emit(HomeState.error(error));
       _logger.logError(error, stackTrace);
     }
-  }
-
-  List<HomeRepositoryHeadline> _mapRepositories(SearchResult result) {
-    return result.items.map((e) {
-      return HomeRepositoryHeadline(
-        id: e.id,
-        title: e.title,
-        repository: e,
-      );
-    }).toList();
   }
 }
