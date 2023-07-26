@@ -21,7 +21,6 @@ class HomeBloc extends BaseBloc<HomeEvent, HomeState> {
 
   Future<void> _search(HomeSearchEvent event, Emitter<HomeState> emit) async {
     try {
-      print('event: $event');
       if (event.query.isEmpty) {
         emit(const HomeState.empty());
         return;
