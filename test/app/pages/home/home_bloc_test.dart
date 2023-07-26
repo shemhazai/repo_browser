@@ -29,7 +29,7 @@ void main() {
     blocTest(
       'emits loading and content after search',
       build: () {
-        when(useCase.searchRepositories('spacecraft')).thenAnswer((_) async => const SearchResult(
+        when(useCase.searchRepositories('spacecraft')).thenAnswer((_) async => const RepositoriesSearchResult(
               totalCount: 1,
               items: [repository],
             ));
@@ -40,7 +40,7 @@ void main() {
       expect: () => [
         const HomeState.loading(),
         const HomeState.content(
-          searchResult: SearchResult(
+          searchResult: RepositoriesSearchResult(
             totalCount: 1,
             items: [repository],
           ),
@@ -58,7 +58,7 @@ void main() {
     blocTest(
       'emits no results',
       build: () {
-        when(useCase.searchRepositories('spacecraft')).thenAnswer((_) async => const SearchResult(
+        when(useCase.searchRepositories('spacecraft')).thenAnswer((_) async => const RepositoriesSearchResult(
               totalCount: 0,
               items: [],
             ));

@@ -4,13 +4,13 @@ part 'repository.freezed.dart';
 part 'repository.g.dart';
 
 @freezed
-class SearchResult with _$SearchResult {
-  const factory SearchResult({
+class RepositoriesSearchResult with _$RepositoriesSearchResult {
+  const factory RepositoriesSearchResult({
     @JsonKey(name: 'total_count') required int totalCount,
     @JsonKey(name: 'items') required List<Repository> items,
-  }) = _SearchResult;
+  }) = _RepositoriesSearchResult;
 
-  factory SearchResult.fromJson(Map<String, dynamic> json) => _$SearchResultFromJson(json);
+  factory RepositoriesSearchResult.fromJson(Map<String, dynamic> json) => _$RepositoriesSearchResultFromJson(json);
 }
 
 @freezed

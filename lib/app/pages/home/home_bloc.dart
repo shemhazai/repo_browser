@@ -27,11 +27,11 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
       emit(const HomeState.loading());
 
-      final data = await _useCase.searchRepositories(event.query);
-      if (data.items.isEmpty) {
+      final searchResult = await _useCase.searchRepositories(event.query);
+      if (searchResult.items.isEmpty) {
         emit(const HomeState.noResults());
       } else {
-        emit(HomeState.content(searchResult: data));
+        emit(HomeState.content(searchResult: searchResult));
       }
     } on Exception catch (error, stackTrace) {
       emit(HomeState.error(error));

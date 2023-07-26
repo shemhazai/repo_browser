@@ -8,7 +8,7 @@ class HomeState with _$HomeState {
   const factory HomeState.loading() = _LoadingState;
   const factory HomeState.empty() = _EmptyState;
   const factory HomeState.noResults() = _NoResultsState;
-  const factory HomeState.content({required SearchResult searchResult}) = _ContentState;
+  const factory HomeState.content({required RepositoriesSearchResult searchResult}) = _ContentState;
   const factory HomeState.error(Object error) = _ErrorState;
 }
 

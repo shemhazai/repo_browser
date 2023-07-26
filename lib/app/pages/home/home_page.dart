@@ -7,7 +7,8 @@ import 'package:repo_browser/app/common/theming/dimens.dart';
 import 'package:repo_browser/app/di/di.dart';
 import 'package:repo_browser/app/pages/home/home_bloc.dart';
 import 'package:repo_browser/app/pages/home/home_state.dart';
-import 'package:repo_browser/app/pages/repository/repository_page.dart';
+import 'package:repo_browser/app/router/router.gr.dart';
+import 'package:repo_browser/app/widgets/repository_widget.dart';
 import 'package:repo_browser/generated/locale_keys.g.dart';
 import 'package:repo_browser/model/git/entity/repository.dart';
 
@@ -65,20 +66,22 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: Insets.small,
-      child: Row(children: [
-        Expanded(
-          child: Text(
-            LocaleKeys.page_home_title.tr(),
-            style: Theme.of(context).textTheme.headlineSmall,
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              LocaleKeys.page_home_title.tr(),
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
           ),
-        ),
-        Image.asset(
-          AppImages.icUserAvatar48,
-          width: 48,
-          height: 48,
-          color: Theme.of(context).colorScheme.primaryContainer,
-        ),
-      ]),
+          Image.asset(
+            AppImages.icUserAvatar48,
+            width: 48,
+            height: 48,
+            color: Theme.of(context).colorScheme.primaryContainer,
+          ),
+        ],
+      ),
     );
   }
 }
@@ -167,7 +170,7 @@ class _Error extends StatelessWidget {
 }
 
 class _Content extends StatelessWidget {
-  final SearchResult searchResult;
+  final RepositoriesSearchResult searchResult;
 
   const _Content({required this.searchResult});
 
@@ -190,83 +193,21 @@ class _Content extends StatelessWidget {
             itemCount: searchResult.items.length,
             itemBuilder: (BuildContext context, int index) {
               final Repository repository = searchResult.items[index];
-              return _RepositoryWidget(
+              return RepositoryWidget(
                 repository: repository,
                 onPressed: () {
                   FocusScope.of(context).unfocus();
 
-                  RepositoryPage.show(
-                    context: context,
-                    searchResult: searchResult,
+                  context.router.push(RepositoryRoute(
                     repository: repository,
-                  );
+                    accentColor: Colors.green,
+                  ));
                 },
               );
             },
           ),
         ),
       ],
-    );
-  }
-}
-
-class _RepositoryWidget extends StatelessWidget {
-  final Repository repository;
-  final VoidCallback? onPressed;
-
-  const _RepositoryWidget({
-    required this.repository,
-    required this.onPressed,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    const Color foregroundColor = Colors.white;
-    return GestureDetector(
-      onTap: onPressed,
-      child: Card(
-        margin: Insets.tiny,
-        clipBehavior: Clip.antiAlias,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(8)),
-        ),
-        child: SizedBox(
-          height: 100,
-          child: Stack(children: [
-            Positioned.fill(
-              child: Hero(
-                tag: RepositoryPage.buildImageTag(repository.id.toString()),
-                child: Image.network(
-                  repository.owner.avatarUrl,
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Positioned(
-              top: 20,
-              left: 20,
-              right: 20,
-              child: Hero(
-                tag: RepositoryPage.buildTitleTag(repository.id.toString()),
-                child: Text(
-                  repository.name,
-                  style: Theme.of(context).textTheme.titleLarge!.copyWith(color: foregroundColor),
-                ),
-              ),
-            ),
-            Positioned(
-              bottom: 12,
-              right: 12,
-              child: Image.asset(
-                AppImages.icChevronRight24,
-                width: 24,
-                height: 24,
-                color: foregroundColor,
-              ),
-            ),
-          ]),
-        ),
-      ),
     );
   }
 }
